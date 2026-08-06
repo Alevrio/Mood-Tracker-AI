@@ -18,10 +18,10 @@ A Python application that allows users to record their daily moods and notes, th
 
 ## Future Improvements
 
-- 📊 Mood visualization with Matplotlib
-- 🧠 Sentiment analysis using NLP
-- 🌐 Streamlit web interface
-- 🤖 AI-powered mood prediction
+- Mood visualization with Matplotlib
+- Sentiment analysis using NLP
+- Streamlit web interface
+- AI-powered mood prediction
 
 ## Getting Started
 
