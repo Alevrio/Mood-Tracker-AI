@@ -1,3 +1,6 @@
-Happy|Completed my assignment|2026-08-01
-Neutral|Worked on portfolio|2026-08-02
-Sad|Feeling tired today|2026-08-03
+Happy|Finished a programming assignment|2026-08-01
+Neutral|Spent the afternoon studying|2026-08-02
+Sad|Had a tiring day|2026-08-03
+Happy|Worked on my portfolio project|2026-08-04
+Neutral|Really exhausted|2026-08-07
+
