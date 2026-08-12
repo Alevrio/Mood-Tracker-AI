@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 
 def inputFunc():
     selection = ["Happy", "Sad", "Angry", "Neutral"]
@@ -22,19 +23,27 @@ def inputFunc():
             continue
         
         note = input("Note: ")
-        entry = mood + "|" + note + "|" + date + "\n"
+        entry = f"{mood}|{note}|{date}\n"
+        
         with open ("MoodNoteFileData.txt", "a") as file:
             file.write(entry)
+
         check = False
    
 def showAllEntries():
+    if not os.path.exists("MoodNoteFileData.txt"):
+        print("File does not exist, Maybe start adding a mood first.")
+        return
+    
     i = 1
     with open ("MoodNoteFileData.txt", "r") as file:
         for line in file: 
-            mood, note, date = line.strip().split("|")
-            print("\nEntry #" + str(i))
-            print("Date: " + date)
-            print("Mood: "+ mood)
-            print("Note: " + note)
-            i = i + 1
-            
+            parts = line.strip().split("|")
+            if len(parts) == 3:
+                mood, note, date = parts
+                print("\nEntry #" + str(i))
+                print("Date: " + date)
+                print("Mood: "+ mood)
+                print("Note: " + note)
+                i = i + 1
+                

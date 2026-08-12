@@ -1,17 +1,25 @@
 def analyzeMood():
     mood_count = {}
-      
-    with open("MoodNoteFileData.txt", "r") as file: 
-        for line in file:
-            mood, note, date = line.strip().split("|")      
+    
+    try:
+        with open("MoodNoteFileData.txt", "r") as file: 
+            lines = file.readlines()
+            
+    except FileNotFoundError:
+        print("File does not exist yet. File will be created.")
+        with open("MoodNoteFileData.txt", "w+") as file: 
+            lines = []
+    
+    for line in lines:
+        mood, note, date = line.strip().split("|")      
 
-            if  mood in mood_count:
-                mood_count[mood] += 1
-            else: 
-                mood_count[mood] = 1
-                
-            if ("study") in note.lower():
-                print("You are a nerd.")
+        if  mood in mood_count:
+            mood_count[mood] += 1
+        else: 
+            mood_count[mood] = 1
+            
+        if ("study") in note.lower():
+            print("You are a nerd.")
                 
             
     if mood_count:
@@ -37,3 +45,5 @@ def analyzeMood():
     for mood in mood_count:
         percent = (mood_count[mood] /total) * 100
         print(f"{mood}: {percent:.2f}")
+
+        
