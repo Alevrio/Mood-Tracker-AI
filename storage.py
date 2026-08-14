@@ -1,4 +1,5 @@
 from datetime import datetime
+import pandas as pd
 import os
 
 def inputFunc():
@@ -46,4 +47,19 @@ def showAllEntries():
                 print("Mood: "+ mood)
                 print("Note: " + note)
                 i = i + 1
-                
+
+def load_data():
+    if not os.path.exists("MoodNoteFileData.txt"):
+        df = pd.DataFrame(columns=["mood", "note","date"])
+      
+    else:
+        df = pd.read_csv(
+            "MoodNoteFileData.txt", 
+            sep = "|", 
+            names = ["mood", "note", "date"], 
+            skip_blank_lines = True)
+    
+    df['date'] = pd.to_datetime(df['date'])
+    return df
+
+   
