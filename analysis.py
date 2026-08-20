@@ -17,8 +17,8 @@ def total_entries(df):
     return len(df)
 
 def mood_percentages(df):
-    mood_count = count_moods(df)
-    mood_percentage = (mood_count / mood_count.sum()) * 100
+    mood_counts = count_moods(df)
+    mood_percentage = (mood_counts / mood_counts.sum()) * 100
     
     return mood_percentage.round(2)
 
