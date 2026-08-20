@@ -26,6 +26,7 @@ def add_time_features(df):
     df = df.copy()
     if df.empty: 
         return df
+    
     df['date'] = pd.to_datetime(df['date'], format = "%Y-%m-%d")
     
     df['year'], df['month'], df['weekday'] = (
@@ -39,8 +40,10 @@ def add_time_features(df):
 def monthly_mood_insights(df):
     result = add_time_features(df)
     
+    if result.empty:
+        return pd.DataFrame(columns= ["year","month","most_common_moods", "count"])
+        
     grouped = result.groupby(["year", "month"])
-    
     monthly_results = []
     
     for (year, month), monthly_data in grouped:
@@ -53,6 +56,10 @@ def monthly_mood_insights(df):
 
 def monthly_mood_distribution(df):
     result = add_time_features(df)
+    
+    if result.empty:
+        result = pd.DataFrame(columns= ["year","month"])
+        return result
     
     grouped = result.groupby(["year", "month"])
     
