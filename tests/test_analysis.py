@@ -1,5 +1,5 @@
 import pandas as pd
-from analysis import total_entries, count_moods
+from analysis import total_entries, count_moods, most_common_mood, mood_percentages
 
 def test_total_entries_empty():
     df = pd.DataFrame()
@@ -70,4 +70,66 @@ def test_count_moods_empty():
     
     result = count_moods(empty_mood_df)
 
+    assert result.empty
+    
+def test_most_common_mood_winner():
+    winner_df = pd.DataFrame({
+    "mood": ["Happy", "Happy", "Sad", "Neutral"]
+    })
+    
+    mood, count = most_common_mood(winner_df)
+    assert mood == ["Happy"] 
+    assert count == 2
+
+def test_most_common_mood_tie():
+    tie_df = pd.DataFrame({
+    "mood": ["Happy", "Sad", "Happy", "Sad", "Neutral"]
+    })
+    
+    mood, count = most_common_mood(tie_df)
+    assert mood == ["Happy", "Sad"]
+    assert count == 2
+    
+def test_most_common_mood_empty():
+    empty_df = pd.DataFrame({
+    "mood": []
+    })
+
+    result = most_common_mood(empty_df)
+    assert result is None
+
+def test_mood_percentages_single():
+    single_df = pd.DataFrame({
+    "mood": ["Happy"]
+    })
+    
+    result = mood_percentages(single_df)
+    assert result["Happy"] == 100
+    
+def test_mood_percentages_multiple():
+    multiple_df = pd.DataFrame({
+    "mood": ["Happy", "Happy", "Sad", "Neutral"]
+    })
+    
+    result = mood_percentages(multiple_df)
+    assert result["Happy"] == 50
+    assert result["Sad"] == 25
+    assert result["Neutral"] == 25
+    
+    
+def test_mood_percentages_rounding():
+    rounding_df = pd.DataFrame({
+    "mood": ["Happy", "Happy", "Sad"]
+    })
+    
+    result = mood_percentages(rounding_df)
+    assert result["Happy"] == 66.67
+    assert result["Sad"] == 33.33
+
+def test_mood_percentages_empty():
+    empty_df = pd.DataFrame({
+        "mood": []
+    })
+
+    result = mood_percentages(empty_df)
     assert result.empty
