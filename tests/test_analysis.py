@@ -1,5 +1,13 @@
 import pandas as pd
-from analysis import total_entries, count_moods, most_common_mood, mood_percentages
+from analysis import (
+    total_entries, 
+    count_moods, 
+    most_common_mood, 
+    mood_percentages, 
+    add_time_features, 
+    monthly_mood_distribution, 
+    monthly_mood_insights
+)
 
 def test_total_entries_empty():
     df = pd.DataFrame()
@@ -133,3 +141,114 @@ def test_mood_percentages_empty():
 
     result = mood_percentages(empty_df)
     assert result.empty
+
+def test_add_time_features_single():
+    df = pd.DataFrame({
+    "mood": ["Happy"],
+    "date": ["2026-08-01"]
+    })
+    
+    result = add_time_features(df)
+    assert result.loc[0,"year"] == 2026
+    assert result.loc[0,"month"] == 8
+    assert result.loc[0,"weekday"] == "Saturday"
+    assert pd.api.types.is_datetime64_any_dtype(result["date"])
+
+def test_add_time_features_multiple():
+    df = pd.DataFrame({
+    "mood": ["Happy", "Sad", "Neutral"],
+    "date": [
+        "2026-01-05",
+        "2026-08-21",
+        "2027-12-25"
+    ]
+    })
+    
+    result = add_time_features(df)
+    assert result.loc[2,"year"] == 2027
+    assert result.loc[2,"month"] == 12
+    assert result.loc[2,"weekday"] == "Saturday"
+    assert pd.api.types.is_datetime64_any_dtype(result["date"])
+
+def test_add_time_features_original():
+    original_df = pd.DataFrame({
+    "mood": ["Happy"],
+    "date": ["2026-08-01"]
+    })
+
+    result = add_time_features(original_df)
+    assert "year" not in original_df
+    assert "month" not in original_df
+    assert "weekday" not in original_df
+    assert original_df.loc[0, "date"] == "2026-08-01"
+
+def test_add_time_features_empty():
+    empty_df = pd.DataFrame()
+    
+    result = add_time_features(empty_df)
+    assert result.empty
+    
+def test_monthly_mood_distributions_multiple():
+    df = pd.DataFrame({
+    "mood": [
+        "Happy",
+        "Happy",
+        "Sad",
+        "Sad",
+        "Sad",
+        "Neutral"
+    ],
+    "date": [
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03"
+    ]
+    })
+    
+    result = monthly_mood_distribution(df)
+    assert result.loc[0, "Happy"] == 2
+    assert result.loc[1, "Sad"] == 2
+
+def test_monthly_mood_distributions_different_years():
+    df = pd.DataFrame({
+    "mood": ["Happy", "Happy", "Sad"],
+    "date": [
+        "2026-08-01",
+        "2026-08-02",
+        "2027-08-01"
+    ]
+    })
+    
+    result = monthly_mood_distribution(df)
+    assert result.loc[0, "Happy"] == 2
+    assert result.loc[1, "Sad"] == 1
+    
+ 
+def test_monthly_mood_distributions_different_years():
+    df = pd.DataFrame({
+    "mood": ["Happy", "Happy", "Sad"],
+    "date": [
+        "2026-08-01",
+        "2026-08-02",
+        "2027-08-01"
+    ]
+    })
+    result = monthly_mood_distribution(df)
+    assert result.loc[0, "Happy"] == 2
+    assert result.loc[1, "Sad"] == 1
+    assert result.loc[0, "year"] == 2026
+    assert result.loc[1, "year"] == 2027
+    
+def test_monthly_mood_distributions_empty():
+    empty_df = pd.DataFrame()
+
+    result = monthly_mood_distribution(empty_df)
+    assert result.empty
+    assert "year" in result.columns
+    assert "month" in result.columns
+    
+#def test_monthly_mood_insights():
+    
