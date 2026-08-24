@@ -6,7 +6,7 @@ def count_moods(df):
 def most_common_mood(df):
     mood_counts = count_moods(df)
     if mood_counts.empty:
-            return None
+        return None
     
     highest_count = mood_counts.max()
     highest_mood = mood_counts[mood_counts == highest_count]
@@ -58,9 +58,8 @@ def monthly_mood_distribution(df):
     result = add_time_features(df)
     
     if result.empty:
-        result = pd.DataFrame(columns= ["year","month"])
-        return result
-    
+        return pd.DataFrame(columns= ["year","month"])
+
     grouped = result.groupby(["year", "month"])
     
     monthly_results = []

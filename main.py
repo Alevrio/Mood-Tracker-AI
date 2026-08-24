@@ -1,8 +1,4 @@
-#User Inputs - mood & note;
-#Program will store data then AI will analyze patterns
-#Outputs will be insights like you feel most productive on weekdays
-
-from storage import inputFunc, showAllEntries,load_data
+from storage import input_mood_entry, show_all_entries, load_data
 from analysis import (
     count_moods,
     most_common_mood,
@@ -16,11 +12,11 @@ import matplotlib.pyplot as plt
 def choices(choice):
     match choice: 
         case 1:  
-            return inputFunc()
+            return input_mood_entry()
         case 2:
             return analysis_menu()
         case 3:
-            return showAllEntries()
+            return show_all_entries()
         case _:
             print("Please input a correct choice")
 
@@ -32,17 +28,7 @@ def analysis_menu():
         print("3) Monthly Mood Chart")
         print("4) Back")
         
-        user_input = input("What's your choice: ").strip()
-        
-        if not user_input or not user_input.isdigit():
-            print("Not a valid option (Choose selectively within the menu).")
-            continue
-        
-        choice = int(user_input)
-        
-        if choice < 1 or choice > 4:
-            print("Not a valid option (Choose selectively within the menu).")
-            continue
+        choice = get_menu_choice(1,4)
                 
         if choice == 4:
             return
@@ -106,14 +92,9 @@ def show_monthly_chart():
     
     fig, ax = plot_monthly_mood_distribution(df)
     plt.show()
-            
-def main():
+    
+def get_menu_choice(minimum, maximum):
     while True:
-        print("1. Input Mood and Note")
-        print("2. Show Analysis")
-        print("3. Show all entries.")
-        print("4. Exit")
-       
         user_input = input("What's your choice: ").strip()
         
         if not user_input or not user_input.isdigit():
@@ -122,10 +103,21 @@ def main():
         
         choice = int(user_input)
         
-        if choice < 1 or choice > 4:
+        if choice < minimum or choice > maximum:
             print("Not a valid option (Choose selectively within the menu).")
             continue
-                
+        
+        return choice
+    
+def main():
+    while True:
+        print("1. Input Mood and Note")
+        print("2. Show Analysis")
+        print("3. Show all entries.")
+        print("4. Exit")
+        
+        choice = get_menu_choice(1,4)
+        
         if choice == 4:
             return
 

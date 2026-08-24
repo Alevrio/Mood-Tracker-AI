@@ -2,7 +2,7 @@ from datetime import datetime
 import pandas as pd
 import os
 
-def inputFunc():
+def input_mood_entry():
     selection = ["Happy", "Sad", "Angry", "Neutral"]
     date = datetime.now().strftime("%Y-%m-%d")
 
@@ -31,7 +31,7 @@ def inputFunc():
 
         check = False
    
-def showAllEntries():
+def show_all_entries():
     if not os.path.exists("MoodNoteFileData.txt"):
         print("File does not exist, Maybe start adding a mood first.")
         return

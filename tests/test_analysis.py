@@ -221,21 +221,6 @@ def test_monthly_mood_distributions_different_years():
         "2027-08-01"
     ]
     })
-    
-    result = monthly_mood_distribution(df)
-    assert result.loc[0, "Happy"] == 2
-    assert result.loc[1, "Sad"] == 1
-    
- 
-def test_monthly_mood_distributions_different_years():
-    df = pd.DataFrame({
-    "mood": ["Happy", "Happy", "Sad"],
-    "date": [
-        "2026-08-01",
-        "2026-08-02",
-        "2027-08-01"
-    ]
-    })
     result = monthly_mood_distribution(df)
     assert result.loc[0, "Happy"] == 2
     assert result.loc[1, "Sad"] == 1
