@@ -250,5 +250,63 @@ def test_monthly_mood_distributions_empty():
     assert "year" in result.columns
     assert "month" in result.columns
     
-#def test_monthly_mood_insights():
+def test_monthly_mood_insights_multiple():
+    df = pd.DataFrame({
+    "mood": [
+        "Happy",
+        "Happy",
+        "Sad",
+        "Sad",
+        "Sad",
+        "Neutral"
+    ],
+    "date": [
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03"
+    ]
+    })
     
+    result = monthly_mood_insights(df)
+    assert result.loc[0, "year"] == 2026
+    assert result.loc[0, "month"] == 8
+    assert result.loc[0, "most_common_moods"]== ["Happy"]
+    assert result.loc[0, "count"] == 2
+
+def test_monthly_mood_insights_tie():
+    df = pd.DataFrame({
+        "mood": [
+            "Happy",
+            "Sad",
+            "Happy",
+            "Sad",
+            "Neutral"
+        ],
+        "date": [
+            "2026-08-01",
+            "2026-08-02",
+            "2026-08-03",
+            "2026-08-04",
+            "2026-08-05"
+        ]
+    })
+    
+    result = monthly_mood_insights(df)
+    assert result.loc[0, "year"] == 2026
+    assert result.loc[0, "month"] == 8
+    assert set(result.loc[0, "most_common_moods"]) == {"Happy", "Sad"}
+    assert result.loc[0, "count"] == 2
+    
+def test_monthly_mood_insights_empty():
+    empty_df = pd.DataFrame()
+    
+    result = monthly_mood_insights(empty_df)
+    
+    assert result.empty
+    assert "year" in result.columns
+    assert "month" in result.columns
+    assert "most_common_moods" in result.columns
+    assert "count" in result.columns
