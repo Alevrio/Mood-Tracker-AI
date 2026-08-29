@@ -2,3 +2,5 @@ pandas
 matplotplib
 numpy
 pytest
+scikit-learn
+sentence-transformers
