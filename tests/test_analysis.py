@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from analysis import (
     total_entries, 
     count_moods, 
@@ -6,7 +7,9 @@ from analysis import (
     mood_percentages, 
     add_time_features, 
     monthly_mood_distribution, 
-    monthly_mood_insights
+    monthly_mood_insights,
+    mood_distribution_by_cluster,
+    monthly_cluster_distribution
 )
 
 def test_total_entries_empty():
@@ -295,3 +298,94 @@ def test_monthly_mood_insights_empty():
     assert "month" in result.columns
     assert "most_common_moods" in result.columns
     assert "count" in result.columns
+    
+def test_mood_distribution_by_cluster():
+    df = pd.DataFrame({
+    "mood": [
+        "Sad",
+        "Sad",
+        "Happy",
+        "Angry",
+        "Angry",
+        "Happy",
+    ]
+    })
+
+    cluster_labels = np.array([
+        0, 0, 0,
+        1, 1, 1
+        ])
+    
+    result = mood_distribution_by_cluster(df, cluster_labels)
+    sad_cluster_0 = result[
+        (result["cluster"] == 0) &
+        (result["mood"] == "Sad")
+        ]
+    
+    assert len(sad_cluster_0) == 1
+    assert sad_cluster_0["count"].iloc[0] == 2
+    assert sad_cluster_0["cluster_total"].iloc[0]  == 3
+    assert sad_cluster_0["percentage"].iloc[0]  == 66.67
+    assert "cluster" not in df.columns
+    
+def test_mood_distribution_by_cluster_empty():
+    empty_df = pd.DataFrame({
+    "mood": []
+    })
+
+    cluster_labels = np.array([])
+    
+    result = mood_distribution_by_cluster(empty_df, cluster_labels)
+    
+    assert len(result) == 0
+    assert result.empty
+    
+def test_monthly_cluster_distributions_normal():
+    df = pd.DataFrame({
+    "mood": [
+        "Happy",
+        "Sad",
+        "Happy",
+        "Angry",
+        "Sad",
+        "Happy",
+    ],
+    "date": [
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03",
+    ]
+    })
+
+    cluster_labels = np.array([
+        0, 0, 1,
+        0, 1, 1
+    ])
+    
+    result = monthly_cluster_distribution(df, cluster_labels)
+    august_cluster_0 = result[
+    (result["year"] == 2026)
+    & (result["month"] == 8)
+    & (result["cluster"] == 0)
+    ]
+    assert len(august_cluster_0) == 1
+    assert august_cluster_0["count"].iloc[0] == 2
+    assert "cluster" not in df.columns
+    assert "year" not in df.columns
+    assert "month" not in df.columns
+    
+def test_monthly_cluster_distributions_empty():
+    empty_df = pd.DataFrame({
+    "mood": [],
+    "date": []
+    })
+
+    cluster_labels = np.array([])
+    
+    result = monthly_cluster_distribution(empty_df, cluster_labels)
+    
+    
+    assert list(result.columns) == ["year","month","cluster","count"]

@@ -2,8 +2,12 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
+
+def has_enough_notes(notes, minimum_notes = 12):
+    return len(notes) >= minimum_notes
 
 def generate_embeddings(notes):
     if len(notes) == 0:
@@ -52,3 +56,23 @@ def find_representative_notes(notes, note_embeddings, cluster_labels, clusterer)
         representatives[cluster_id] = notes[original_index]
         
     return representatives
+
+def extract_cluster_keywords(notes, cluster_labels, top_n = 3):
+    notes = np.array(notes)
+    keywords= {}
+    
+    for cluster_id in np.unique(cluster_labels):
+        vectorizer = TfidfVectorizer(stop_words = "english")
+        cluster_notes = notes[cluster_labels == cluster_id]
+        tf_idf_matrix = vectorizer.fit_transform(cluster_notes)
+        
+        feature_keywords = np.array(vectorizer.get_feature_names_out())
+        
+        total_scores = np.asarray(tf_idf_matrix.sum(axis = 0)).ravel()
+        
+        top_indices = np.argsort(total_scores)[-top_n:][::-1]
+        top_keywords = feature_keywords[top_indices].tolist()
+        keywords[cluster_id] = top_keywords
+        
+    return keywords
+

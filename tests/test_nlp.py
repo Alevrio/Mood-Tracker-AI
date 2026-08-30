@@ -1,6 +1,12 @@
 import numpy as np
-from nlp import generate_embeddings, fit_note_clusters, choose_cluster_count, find_representative_notes
-
+from nlp import (
+    has_enough_notes,
+    generate_embeddings, 
+    fit_note_clusters, 
+    choose_cluster_count, 
+    find_representative_notes, 
+    extract_cluster_keywords
+)
 def test_generate_embeddings_normal():
     notes = [
         "I studied for my exam",
@@ -104,3 +110,50 @@ def test_find_representative_notes():
     }
     
     assert len(representatives) == 2
+    
+def test_extract_cluster_keywords_normal():
+    notes = [
+    "calculus exam calculus",
+    "calculus homework",
+
+    "valorant gaming valorant",
+    "valorant gaming",
+    ]
+
+    cluster_labels = np.array([
+        0,
+        0,
+        
+        1,
+        1
+    ])
+    
+    result = extract_cluster_keywords(notes, cluster_labels, top_n = 2)
+    assert set(result[0]) == {"calculus", "homework"}
+    assert set(result[1]) == {"valorant", "gaming"}
+
+def test_extract_cluster_keywords_empty():
+    notes = []
+    cluster_labels = np.array([])
+    result = extract_cluster_keywords(notes, cluster_labels)
+    
+    assert result == {}
+    
+def test_has_enough_notes_below_threshold():
+    notes = ["note"] * 11
+    result = has_enough_notes(notes)
+    assert result is False
+
+def test_has_enough_notes_at_threshold():
+    notes = ["note"] * 12
+    result = has_enough_notes(notes)
+    assert result is True
+
+def test_has_enough_notes_above_threshold():
+    notes = ["note"] * 13
+    result = has_enough_notes(notes)
+    assert result is True
+    
+def test_has_enough_notes_minimum_notes():
+    notes = ["note"] * 3
+    assert has_enough_notes(notes, minimum_notes = 3) is True

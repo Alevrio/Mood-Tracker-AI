@@ -77,3 +77,25 @@ def monthly_mood_distribution(df):
     summary_df[mood_columns] = summary_df[mood_columns].astype(int)
     
     return summary_df
+
+def mood_distribution_by_cluster(df, cluster_labels):
+    cluster_df = df.copy()
+    cluster_df["cluster"] = cluster_labels
+    
+    grouped_cluster_df = cluster_df.groupby(["cluster", "mood"]).size().reset_index(name="count")
+    grouped_cluster_df["cluster_total"] = grouped_cluster_df.groupby("cluster")["count"].transform("sum")
+    grouped_cluster_df["percentage"] = ((grouped_cluster_df["count"] / grouped_cluster_df["cluster_total"]) * 100).round(2)
+  
+    return grouped_cluster_df
+
+def monthly_cluster_distribution(df, cluster_labels):
+    cluster_df = add_time_features(df)
+    
+    if cluster_df.empty:
+        return pd.DataFrame(columns = ["year", "month", "cluster", "count"]) 
+    
+    cluster_df["cluster"] = cluster_labels
+    monthly_clusters = cluster_df.groupby(["year", "month", "cluster"]).size().reset_index(name = "count")
+    
+    return monthly_clusters
+    
