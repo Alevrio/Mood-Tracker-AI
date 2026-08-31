@@ -25,11 +25,7 @@ page = st.sidebar.radio(
 
 if page == "Home":
     st.title("🌱 Mood Tracker")
-    st.write(
-        "Track your mood, explore your history, "
-        "and discover patterns over time."
-    )
-    
+  
     mood = st.selectbox(
         "How are you feeling?",
         ["Happy", "Neutral", "Sad", "Angry"],
