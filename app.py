@@ -8,9 +8,9 @@ from analysis import (
 )
 from life_patterns import build_life_patterns
 st.set_page_config(
-    page_title = "Mood Tracker",
+    page_title="MoodLens",
     page_icon="🌱",
-    layout = "wide",
+    layout="wide",
 )
 
 page = st.sidebar.radio(
@@ -24,7 +24,7 @@ page = st.sidebar.radio(
 )
 
 if page == "Home":
-    st.title("🌱 Mood Tracker")
+    st.title("🌱 MoodLens")
   
     mood = st.selectbox(
         "How are you feeling?",
