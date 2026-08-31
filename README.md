@@ -1,10 +1,8 @@
-# 🌱 Mood Tracker AI
+# 🌱 MoodLens
 
-A mood journaling and analytics application that uses **semantic
-embeddings and unsupervised machine learning** to explore recurring
-themes across journal entries and relate them to self-reported moods and
-time patterns.
+**Semantic Journal & Mood Pattern Analysis**
 
+A mood journaling and analytics application that uses **semantic embeddings and unsupervised machine learning** to explore recurring themes across journal entries and relate them to self-reported moods and time patterns.
 **Live Demo:** https://mood-tracker-ai.streamlit.app/
 
 > **Note:** Life Patterns are exploratory associations derived from
@@ -334,8 +332,8 @@ particular emotion.
 ### 1. Clone the repository
 
 ``` bash
-git clone https://github.com/Alevrio/Mood-Tracker-AI.git
-cd Mood-Tracker-AI
+git clone https://github.com/Alevrio/MoodLens.git
+cd MoodLens
 ```
 
 ### 2. Install dependencies
