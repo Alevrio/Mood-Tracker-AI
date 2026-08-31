@@ -1,5 +1,5 @@
 import pandas as pd
-
+import calendar
 def count_moods(df):
     return df['mood'].value_counts()
 
@@ -98,4 +98,38 @@ def monthly_cluster_distribution(df, cluster_labels):
     monthly_clusters = cluster_df.groupby(["year", "month", "cluster"]).size().reset_index(name = "count")
     
     return monthly_clusters
+    
+def generate_mood_insight(cluster_mood_data):
+    dominant_index = cluster_mood_data["percentage"].idxmax()
+    dominant_row = cluster_mood_data.loc[dominant_index]
+    
+    if dominant_row["cluster_total"] < 3:
+        return (f"This pattern has only appeared in "
+                f"{dominant_row['cluster_total']} entries so far, "
+                f"so there isn't enough history to characterize its mood pattern yet")
+        
+    if dominant_row["percentage"] < 60:
+        return (f"This pattern appeared in {dominant_row['cluster_total']} entries, "
+                f"with no single mood strongly dominating."
+        )
+        
+    return (f"{dominant_row['mood']} was the most common mood for this pattern, " 
+            f"appearing in {dominant_row['percentage']}% of its "
+            f"{dominant_row['cluster_total']} entries."
+            )
+
+def generate_time_insight(cluster_time_data):
+    highest_count = cluster_time_data["count"].max()
+    peak_rows = cluster_time_data[cluster_time_data["count"] == highest_count]
+    
+    if len(peak_rows) > 1: 
+        return f"This pattern appeared equally often across multiple peak months, with {int(highest_count)} entries in each."
+    
+    peak_row = peak_rows.iloc[0]
+    month_name = calendar.month_name[int(peak_row["month"])]
+    year = int(peak_row["year"])
+    count = int(peak_row["count"])
+    
+    return f"This pattern appeared most frequently in {month_name} {year}, with {count} entries."
+            
     

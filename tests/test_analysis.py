@@ -9,7 +9,9 @@ from analysis import (
     monthly_mood_distribution, 
     monthly_mood_insights,
     mood_distribution_by_cluster,
-    monthly_cluster_distribution
+    monthly_cluster_distribution,
+    generate_mood_insight,
+    generate_time_insight
 )
 
 def test_total_entries_empty():
@@ -389,3 +391,54 @@ def test_monthly_cluster_distributions_empty():
     
     
     assert list(result.columns) == ["year","month","cluster","count"]
+    
+def test_generate_mood_insight_low():
+    data = pd.DataFrame({
+    "mood": ["Sad", "Happy"],
+    "cluster_total": [2, 2],
+    "percentage": [50.0, 50.0],
+    })
+    result = generate_mood_insight(data)
+    assert result == ("This pattern has only appeared in 2 entries so far, " 
+                      "so there isn't enough history to characterize its mood pattern yet")
+    
+    
+def test_generate_mood_insight_mixed():
+    data = pd.DataFrame({
+    "mood": ["Sad", "Happy", "Neutral"],
+    "cluster_total": [5, 5, 5],
+    "percentage": [40.0, 40.0, 20.0],
+    })
+    result = generate_mood_insight(data)
+    assert result == "This pattern appeared in 5 entries, with no single mood strongly dominating."
+    
+def test_generate_mood_insight_above():
+    data = pd.DataFrame({
+    "mood": ["Sad", "Happy"],
+    "cluster_total": [10, 10],
+    "percentage": [60.0, 40.0],
+    })
+    result = generate_mood_insight(data)
+    assert result == "Sad was the most common mood for this pattern, appearing in 60.0% of its 10 entries."
+
+def test_generate_time_insight_single():
+    data = pd.DataFrame({
+    "year": [2026, 2026, 2026],
+    "month": [8, 9, 10],
+    "cluster": [0, 0, 0],
+    "count": [2, 6, 3],
+    })
+    
+    result = generate_time_insight(data)
+    assert result == "This pattern appeared most frequently in September 2026, with 6 entries."
+
+def test_generate_time_insight_tie():
+    data = pd.DataFrame({
+    "year": [2026, 2026, 2026],
+    "month": [8, 9, 10],
+    "cluster": [0, 0, 0],
+    "count": [5, 5, 2],
+    })
+    
+    result = generate_time_insight(data)
+    assert result == "This pattern appeared equally often across multiple peak months, with 5 entries in each."
