@@ -15,7 +15,7 @@ time patterns.
 
 ### Life Patterns
 
-![Life Patterns showing recurring semantic themes, mood associations, temporal patterns, and representative journal entries](assets/life-patterns.png)
+![Life Patterns showing recurring semantic themes, mood associations, temporal patterns, and representative journal entries](assets/life_patterns.png)
 
 [Try the live demo](https://mood-tracker-ai.streamlit.app/)
 
@@ -175,9 +175,6 @@ rather than unsupported causal claims such as:
 
 ## Architecture
 
-```markdown
-## Architecture
-
 ![Mood Tracker AI system architecture](assets/architecture.png)
 
 The project separates storage, analytics, NLP, visualization, and Life
@@ -264,12 +261,12 @@ categories.
 
 Candidate silhouette scores were approximately:
 
-    K   Silhouette Score
-  --- ------------------
-    2              0.052
-    3              0.050
-    4              0.047
-    5              0.052
+  | K | Silhouette Score |
+|---:|---:|
+| 2 | 0.052 |
+| 3 | 0.050 |
+| 4 | 0.047 |
+| 5 | 0.052 |
 
 The result demonstrated that the numerically highest silhouette score
 does not necessarily correspond to the most human-interpretable semantic
