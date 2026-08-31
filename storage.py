@@ -4,7 +4,6 @@ import os
 
 def input_mood_entry():
     selection = ["Happy", "Sad", "Angry", "Neutral"]
-    date = datetime.now().strftime("%Y-%m-%d")
 
     print("What is your mood today?")
     print("Selection: Happy, Sad, Angry, Neutral")
@@ -24,13 +23,26 @@ def input_mood_entry():
             continue
         
         note = input("Note: ")
-        entry = f"{mood}|{note}|{date}\n"
+        save_mood_entry(mood, note)
         
-        with open ("MoodNoteFileData.txt", "a") as file:
-            file.write(entry)
-
         check = False
-   
+
+def save_mood_entry(mood, note):
+    date = datetime.now().strftime("%Y-%m-%d")
+    entry = f"{mood}|{note}|{date}\n"
+    
+    if os.path.exists("MoodNoteFileData.txt"):
+        with open("MoodNoteFileData.txt", "r") as file:
+            existing = file.read()
+
+        if existing and not existing.endswith("\n"):
+            with open("MoodNoteFileData.txt", "a") as file:
+                file.write("\n")
+
+    with open ("MoodNoteFileData.txt", "a") as file:
+        file.write(entry)
+
+    
 def show_all_entries():
     if not os.path.exists("MoodNoteFileData.txt"):
         print("File does not exist, Maybe start adding a mood first.")

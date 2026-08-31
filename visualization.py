@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from analysis import monthly_mood_distribution
+
 def plot_mood_counts(mood_counts):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize = (8, 4))
     ax.set_title("Mood Counts")
     
     if mood_counts.empty: 
@@ -20,7 +21,7 @@ def plot_mood_counts(mood_counts):
     return fig, ax
 
 def plot_monthly_mood_distribution(df):
-    fig, ax = plt.subplots() 
+    fig, ax = plt.subplots(figsize = (8, 4)) 
     ax.set_title("Monthly Mood Distribution")
     
     if df.empty: 

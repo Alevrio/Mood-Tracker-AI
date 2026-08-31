@@ -1,5 +1,5 @@
 import pandas as pd
-from storage import load_data
+from storage import load_data, save_mood_entry
 
 def test_load_data_missing_file(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
@@ -36,3 +36,37 @@ def test_load_data_existing_empty_file(tmp_path, monkeypatch):
     result = load_data()
     assert result.empty
     assert list(result.columns) == ["mood", "note", "date"]
+    
+def test_save_mood_entry(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    save_mood_entry("Happy", "Finished my project")
+
+    file = tmp_path / "MoodNoteFileData.txt"
+
+    assert file.exists()
+
+    content = file.read_text()
+
+    assert "Happy" in content
+    assert "Finished my project" in content
+    
+def test_save_mood_entry_handles_missing_newline(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    file = tmp_path / "MoodNoteFileData.txt"
+
+    file.write_text(
+        "Sad|Existing note|2026-08-30"
+    )
+    
+    save_mood_entry(
+    "Happy",
+    "New note"
+    )
+    
+    lines = file.read_text().splitlines()
+
+    assert len(lines) == 2
+    assert lines[0] == "Sad|Existing note|2026-08-30"
+    assert lines[1].startswith("Happy|New note|")

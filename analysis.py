@@ -121,9 +121,9 @@ def generate_mood_insight(cluster_mood_data):
 def generate_time_insight(cluster_time_data):
     highest_count = cluster_time_data["count"].max()
     peak_rows = cluster_time_data[cluster_time_data["count"] == highest_count]
-    
+    entry_word = "entry" if int(highest_count) == 1 else "entries"
     if len(peak_rows) > 1: 
-        return f"This pattern appeared equally often across multiple peak months, with {int(highest_count)} entries in each."
+        return f"This pattern appeared equally often across multiple peak months, with {int(highest_count)} {entry_word} in each."
     
     peak_row = peak_rows.iloc[0]
     month_name = calendar.month_name[int(peak_row["month"])]

@@ -4,3 +4,4 @@ numpy
 pytest
 scikit-learn
 sentence-transformers
+streamlit

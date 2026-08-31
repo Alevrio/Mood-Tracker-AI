@@ -4,14 +4,24 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
 def has_enough_notes(notes, minimum_notes = 12):
     return len(notes) >= minimum_notes
+
+model = None
+
+def get_embedding_model():
+    global model
+    
+    if model is None:
+        model = SentenceTransformer("all-MiniLM-L6-v2")
+        
+    return model
 
 def generate_embeddings(notes):
     if len(notes) == 0:
         return np.empty((0, 384))
+    
+    model = get_embedding_model()
     return model.encode(notes)
 
 def choose_cluster_count(note_embeddings):
